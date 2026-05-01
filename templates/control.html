@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}远程控制 - 办公室智能用电管理系统{% endblock %}
+{% block page_title %}远程开关控制{% endblock %}
+
+{% block header_actions %}
+<button class="btn btn-primary btn-sm" id="btnAddGroup">新建分组</button>
+<button class="btn btn-secondary btn-sm" id="btnAddDevice">添加设备</button>
+{% endblock %}
+
+{% block content %}
+<script>
+  // 必须在 app.js 之前设置，确保控制页初始化逻辑能运行
+  window.__PAGE__ = "control";
+</script>
+<div class="control-section">
+    <div class="control-section-title">分组控制</div>
+    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:16px;">将多个电器归为一组，可一键同时开关。</p>
+    <div class="group-list" id="groupList"></div>
+    <div class="empty-state" id="groupEmpty" hidden>
+        <div class="empty-icon">🧩</div>
+        <p>暂无分组，请点击右上角“新建分组”</p>
+    </div>
+</div>
+
+<div class="control-section">
+    <div class="control-section-title">单个设备控制</div>
+    <div class="device-list" id="deviceList"></div>
+    <div class="empty-state" id="deviceEmpty" hidden>
+        <div class="empty-icon">🔌</div>
+        <p>暂无设备，请点击右上角“添加设备”</p>
+    </div>
+</div>
+
+<div class="modal-backdrop" id="deviceAddModal" hidden>
+    <div class="modal-panel" role="dialog" aria-labelledby="deviceAddModalTitle">
+        <div class="modal-header">
+            <h3 id="deviceAddModalTitle">添加设备</h3>
+            <button type="button" class="modal-close" id="deviceAddModalClose" aria-label="关闭">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="deviceAddName">设备名称</label>
+                <input id="deviceAddName" type="text" placeholder="必填" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="deviceAddType">设备类型</label>
+                <select id="deviceAddType">
+                    <option value="空调">空调</option>
+                    <option value="电视">电视</option>
+                    <option value="照明">照明</option>
+                    <option value="电脑">电脑</option>
+                    <option value="打印机">打印机</option>
+                    <option value="饮水机">饮水机</option>
+                    <option value="其他" selected>其他</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="deviceAddLocation">位置/区域</label>
+                <input id="deviceAddLocation" type="text" placeholder="可选">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" id="deviceAddCancel">取消</button>
+            <button type="button" class="btn btn-primary btn-sm" id="deviceAddSubmit">保存</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block title %}用电统计 - 办公室智能用电管理系统{% endblock %}
+{% block page_title %}基础用电统计{% endblock %}
+
+{% block header_actions %}
+<button class="btn btn-secondary btn-sm" type="button" id="btnStatsExport" title="导出下方「设备用电报表」为 CSV">导出设备报表</button>
+{% endblock %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js" crossorigin="anonymous"></script>
+<script>window.__PAGE__ = "statistics";</script>
+<div class="card" style="margin-bottom:16px;">
+    <div class="card-title">办公室筛选与对比</div>
+    <div class="form-row" style="flex-wrap:wrap; align-items:flex-end; gap:12px; margin-bottom:0;">
+        <div class="form-group" style="margin-bottom:0;">
+            <label for="statsOfficeFilter">统计口径</label>
+            <select id="statsOfficeFilter" style="padding:8px 12px; border-radius:8px; border:1px solid var(--card-border);">
+                <option value="ALL">全局（跨办公室）</option>
+            </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+            <label>说明</label>
+            <div style="font-size:13px; color:var(--text-secondary);">选择某个办公室后，下方每日/每周/每月将按该办公室聚合；设备报表仍按日期区间展示。</div>
+        </div>
+    </div>
+</div>
+<div class="stats-tabs">
+    <button class="btn btn-secondary active" data-tab="day">每日</button>
+    <button class="btn btn-secondary" data-tab="week">每周</button>
+    <button class="btn btn-secondary" data-tab="month">每月</button>
+</div>
+
+<div data-panel="day" class="card">
+    <div class="card-title">每日用电报表</div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>用电量 (kWh)</th>
+                    <th>峰值功率 (kW)</th>
+                    <th>电费估算 (元)</th>
+                </tr>
+            </thead>
+            <tbody id="statsDailyBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<div data-panel="week" class="card" hidden>
+    <div class="card-title">每周用电报表</div>
+    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:12px;">按 ISO 自然周汇总全办公室用电量（近 12 周，新→旧）；日均 = 周电量 ÷ 7。</p>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>周次</th>
+                    <th>用电量 (kWh)</th>
+                    <th>周内峰值功率 (kW)</th>
+                    <th>日均 (kWh)</th>
+                    <th>电费估算 (元)</th>
+                    <th>有效天数</th>
+                </tr>
+            </thead>
+            <tbody id="statsWeekBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<div data-panel="month" class="card" hidden>
+    <div class="card-title">每月用电报表</div>
+    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:12px;">按自然月汇总（近 12 月，新→旧）；当月日均 = 月累计 ÷ 当月已过天数（含今天）。</p>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>月份</th>
+                    <th>用电量 (kWh)</th>
+                    <th>月内峰值功率 (kW)</th>
+                    <th>日均 (kWh)</th>
+                    <th>电费估算 (元)</th>
+                    <th>有效天数</th>
+                </tr>
+            </thead>
+            <tbody id="statsMonthBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">设备用电报表</div>
+    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:12px;">
+        按设备汇总指定日期范围内的用电量（数据来自每日模拟采样汇总）。
+    </p>
+    <div class="form-row" style="flex-wrap:wrap; align-items:flex-end; gap:12px; margin-bottom:16px;">
+        <div class="form-group" style="margin-bottom:0;">
+            <label for="statsDeviceStart">开始日期</label>
+            <input type="date" id="statsDeviceStart" style="padding:8px 12px; border-radius:8px; border:1px solid var(--card-border);">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+            <label for="statsDeviceEnd">结束日期</label>
+            <input type="date" id="statsDeviceEnd" style="padding:8px 12px; border-radius:8px; border:1px solid var(--card-border);">
+        </div>
+        <button class="btn btn-primary btn-sm" type="button" id="statsDeviceQuery">查询</button>
+    </div>
+    <div id="statsDeviceChart" class="stats-echart"></div>
+    <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">上图：所选日期内各设备每日用电量堆叠曲线（超过 12 台时合并为「其他」）。</p>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>设备名称</th>
+                    <th>类型</th>
+                    <th>位置</th>
+                    <th>用电量 (kWh)</th>
+                    <th>区间内峰值功率 (kW)</th>
+                    <th>电费估算 (元)</th>
+                    <th>用电占比</th>
+                </tr>
+            </thead>
+            <tbody id="statsDeviceBody"></tbody>
+        </table>
+    </div>
+    <p id="statsDeviceFootnote" style="font-size:13px; color:var(--text-secondary); margin-top:12px; margin-bottom:0;"></p>
+</div>
+
+<div class="card">
+    <div class="card-title">办公室横向对比（按所选日期区间）</div>
+    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:12px;">与上方「设备用电报表」的日期可分别设置；在此选择区间后点击「对比查询」刷新柱状图与表格。</p>
+    <div class="form-row" style="flex-wrap:wrap; align-items:flex-end; gap:12px; margin-bottom:16px;">
+        <div class="form-group" style="margin-bottom:0;">
+            <label for="statsCompareStart">开始日期</label>
+            <input type="date" id="statsCompareStart" style="padding:8px 12px; border-radius:8px; border:1px solid var(--card-border);">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+            <label for="statsCompareEnd">结束日期</label>
+            <input type="date" id="statsCompareEnd" style="padding:8px 12px; border-radius:8px; border:1px solid var(--card-border);">
+        </div>
+        <button class="btn btn-primary btn-sm" type="button" id="statsCompareQuery">对比查询</button>
+    </div>
+    <div id="statsOfficeCompareChart" class="stats-echart"></div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>办公室</th>
+                    <th>设备数</th>
+                    <th>用电量 (kWh)</th>
+                    <th>峰值功率 (kW)</th>
+                    <th>电费估算 (元)</th>
+                    <th>占比</th>
+                </tr>
+            </thead>
+            <tbody id="statsOfficeCompareBody"></tbody>
+        </table>
+    </div>
+    <p id="statsOfficeCompareFootnote" style="font-size:13px; color:var(--text-secondary); margin-top:12px; margin-bottom:0;"></p>
+</div>
+
+<div class="card">
+    <div class="card-title">统计摘要</div>
+    <div class="summary-cards" id="statsSummary">
+        <div class="summary-card">
+            <div class="label">本月累计 (kWh)</div>
+            <div class="value">--</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">本月日均 (kWh)</div>
+            <div class="value">--</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">数据来源</div>
+            <div class="value" style="font-size:16px;">模拟实时采样</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

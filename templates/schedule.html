@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}定时策略 - 办公室智能用电管理系统{% endblock %}
+{% block page_title %}简单定时策略{% endblock %}
+
+{% block header_actions %}
+<button class="btn btn-primary btn-sm" id="btnNewSchedule">新建策略</button>
+{% endblock %}
+
+{% block content %}
+<script>
+  window.__PAGE__ = "schedule";
+</script>
+<div class="card">
+    <div class="card-title">策略说明</div>
+    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:16px;">
+        可设置单次、上班自动开启、下班自动关闭等定时策略，对单个设备或分组生效。支持一次、每天、工作日、周末等规则。
+    </p>
+</div>
+
+<div class="card">
+    <div class="card-title">已配置策略</div>
+    <div class="schedule-list" id="scheduleList"></div>
+    <div class="empty-state" id="scheduleEmpty" hidden>
+        <div class="empty-icon">⏰</div>
+        <p>暂无定时策略，请在下方新建或点击右上角“新建策略”</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">新建定时策略</div>
+    <form id="scheduleForm" style="max-width:520px;">
+        <div class="form-row">
+            <div class="form-group">
+                <label>策略名称</label>
+                <input type="text" id="schName" placeholder="如：上班自动开启照明">
+            </div>
+            <div class="form-group">
+                <label>执行时间</label>
+                <input type="time" id="schTime" value="08:00">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>动作</label>
+                <select id="schAction">
+                    <option value="ON">开启</option>
+                    <option value="OFF">关闭</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>重复</label>
+                <select id="schRepeat">
+                    <option value="ONCE">仅一次</option>
+                    <option value="EVERYDAY">每天</option>
+                    <option value="WEEKDAY">仅工作日</option>
+                    <option value="WEEKEND">仅周末</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" id="schRunDateWrap">
+            <label>执行日期</label>
+            <input type="date" id="schRunDate">
+        </div>
+        <div class="form-group">
+            <label>作用对象</label>
+            <select id="schTarget">
+                <option value="">选择设备或分组</option>
+                <optgroup label="分组" id="schGroupOptions"></optgroup>
+                <optgroup label="设备" id="schDeviceOptions"></optgroup>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">保存策略</button>
+    </form>
+</div>
+{% endblock %}

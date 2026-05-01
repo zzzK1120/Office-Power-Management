@@ -1,0 +1,10 @@
+[project]
+name = "flaskproject1"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "langchain>=1.2.15",
+    "langchain-deepseek>=1.0.1",
+]

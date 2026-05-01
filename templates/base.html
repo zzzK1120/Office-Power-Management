@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}办公室智能用电管理系统{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon">⚡</div>
+                <h1 class="logo-text">智能用电</h1>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('home.index') }}" class="nav-item {% if request.endpoint == 'home.index' %}active{% endif %}">
+                    <span class="nav-icon">🏠</span>
+                    <span>首页</span>
+                </a>
+                <div class="nav-section">
+                    <div class="nav-section-title">办公室模块</div>
+                    <div class="nav-section-hint">当前办公室：{{ current_office_name or '未选择' }}</div>
+                </div>
+                <a href="{{ url_for('monitor.index') }}" class="nav-item {% if request.endpoint == 'monitor.index' %}active{% endif %}">
+                    <span class="nav-icon">📊</span>
+                    <span>实时监控</span>
+                </a>
+                <a href="{{ url_for('control.index') }}" class="nav-item {% if request.endpoint == 'control.index' %}active{% endif %}">
+                    <span class="nav-icon">🔌</span>
+                    <span>远程控制</span>
+                </a>
+                <a href="{{ url_for('schedule.index') }}" class="nav-item {% if request.endpoint == 'schedule.index' %}active{% endif %}">
+                    <span class="nav-icon">⏰</span>
+                    <span>定时策略</span>
+                </a>
+                <div class="nav-divider"></div>
+                <div class="nav-section">
+                    <div class="nav-section-title">全局模块</div>
+                    <div class="nav-section-hint">不随办公室切换</div>
+                </div>
+                <a href="{{ url_for('statistics.index') }}" class="nav-item {% if request.endpoint == 'statistics.index' %}active{% endif %}">
+                    <span class="nav-icon">📈</span>
+                    <span>用电统计</span>
+                </a>
+                <a href="{{ url_for('alarm.index') }}" class="nav-item {% if request.endpoint == 'alarm.index' %}active{% endif %}">
+                    <span class="nav-icon">🔔</span>
+                    <span>异常报警</span>
+                </a>
+                <a href="{{ url_for('agent.index') }}" class="nav-item {% if request.endpoint == 'agent.index' %}active{% endif %}">
+                    <span class="nav-icon">🤖</span>
+                    <span>AI 助手</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="status-dot"></div>
+                <span>系统运行中</span>
+                <span class="sidebar-office">
+                    当前办公室：{{ current_office_name or '未选择' }}
+                </span>
+            </div>
+        </aside>
+        <main class="main">
+            <header class="main-header">
+                <h2 class="page-title">{% block page_title %}首页{% endblock %}</h2>
+                <div class="header-actions">
+                    {% block header_actions %}{% endblock %}
+                </div>
+            </header>
+            <div class="main-content">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/app.js', v='20260430-monitor-remove-smart-close') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

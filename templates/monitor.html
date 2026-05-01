@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}实时监控 - 办公室智能用电管理系统{% endblock %}
+{% block page_title %}设备实时监控{% endblock %}
+
+{% block header_actions %}
+<button class="btn btn-secondary btn-sm" id="btnMonitorRefresh">刷新数据</button>
+{% endblock %}
+
+{% block content %}
+<script>window.__PAGE__ = "monitor";</script>
+<div class="card">
+    <div class="card-title">总览</div>
+    <div class="summary-cards" id="monitorSummary">
+        <div class="summary-card">
+            <div class="label">当前总功率</div>
+            <div class="value">--</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">今日用电量</div>
+            <div class="value">--</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">在线设备</div>
+            <div class="value">--</div>
+        </div>
+        <div class="summary-card">
+            <div class="label">异常设备</div>
+            <div class="value" style="color:var(--danger);">--</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">设备实时数据（模拟每秒刷新入库）</div>
+    <div class="monitor-grid" id="monitorGrid"></div>
+</div>
+
+<div class="modal-backdrop" id="stateLogModal" hidden>
+    <div class="modal-panel" role="dialog" aria-labelledby="stateLogModalTitle">
+        <div class="modal-header">
+            <h3 id="stateLogModalTitle">开关记录查询</h3>
+            <button type="button" class="modal-close" id="stateLogModalClose" aria-label="关闭">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row" style="flex-wrap:wrap; align-items:flex-end; gap:12px;">
+                <div class="form-group" style="margin-bottom:0;">
+                    <label for="stateLogDate">选择日期</label>
+                    <input type="date" id="stateLogDate">
+                </div>
+                <button type="button" class="btn btn-primary btn-sm" id="stateLogQuery">查询</button>
+            </div>
+            <div style="margin-top:14px;" id="stateLogDeviceHint"></div>
+            <div class="table-wrap" style="margin-top:12px;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>时间（HH:MM）</th>
+                            <th>状态</th>
+                            <th>来源</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stateLogBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" id="stateLogClose">关闭</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

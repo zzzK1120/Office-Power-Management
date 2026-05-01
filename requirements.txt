@@ -1,0 +1,9 @@
+Flask>=2.0
+Flask-SQLAlchemy>=3.0
+APScheduler>=3.10
+# 使用 MySQL 时安装其一：mysqlclient（推荐）或 PyMySQL
+mysqlclient>=2.0
+langchain>=0.3
+langchain-openai>=0.3
+
+sqlalchemy

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}AI 助手 - 办公室智能用电管理系统{% endblock %}
+{% block page_title %}AI 助手{% endblock %}
+
+{% block header_actions %}
+<button class="btn btn-secondary btn-sm" id="agentClearChat">清空对话</button>
+{% endblock %}
+
+{% block content %}
+<script>window.__PAGE__ = "agent";</script>
+
+<div class="agent-layout">
+    <section class="agent-main">
+        <div class="card agent-chat-card">
+            <div class="card-title">智能助手</div>
+            <p class="agent-intro">
+                当前已升级为 LangChain 查询 Agent，并支持在确认后执行单设备、分组或办公室范围的开关控制，以及创建定时开关策略。
+            </p>
+            <div class="agent-example-list" id="agentExampleList">
+                <button type="button" class="agent-example-chip" data-prompt="检查一下还有哪些办公室的灯没关">检查一下还有哪些办公室的灯没关</button>
+                <button type="button" class="agent-example-chip" data-prompt="最近30天哪个办公室用电最多">最近30天哪个办公室用电最多</button>
+                <button type="button" class="agent-example-chip" data-prompt="默认办公室最近7天用电情况">默认办公室最近7天用电情况</button>
+                <button type="button" class="agent-example-chip" data-prompt="关闭前台空调">关闭前台空调</button>
+                <button type="button" class="agent-example-chip" data-prompt="打开照明一组">打开照明一组</button>
+                <button type="button" class="agent-example-chip" data-prompt="打开默认办公室所有设备">打开默认办公室所有设备</button>
+                <button type="button" class="agent-example-chip" data-prompt="关闭默认办公室的照明设备">关闭默认办公室的照明设备</button>
+                <button type="button" class="agent-example-chip" data-prompt="每天 18:00 关闭前台空调">每天 18:00 关闭前台空调</button>
+                <button type="button" class="agent-example-chip" data-prompt="工作日 08:30 打开照明一组">工作日 08:30 打开照明一组</button>
+            </div>
+            <div class="agent-messages" id="agentMessages">
+                <div class="agent-message assistant">
+                    <div class="agent-avatar">AI</div>
+                    <div class="agent-bubble">
+                        你好，我是智能助手。当前已升级为 LangChain 查询 Agent，并支持先确认、后执行的设备开关控制、办公室批量控制与定时策略创建。
+                    </div>
+                </div>
+            </div>
+            <form class="agent-input-form" id="agentInputForm">
+                <div class="agent-input-row">
+                    <textarea id="agentInput" class="agent-textarea" rows="3" placeholder="例如：最近30天哪个办公室用电最多，关闭前台空调，打开默认办公室所有设备，或每天 18:00 关闭前台空调"></textarea>
+                    <button type="submit" class="btn btn-primary">发送</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <aside class="agent-side">
+        <div class="card agent-side-card">
+            <div class="card-title">识别结果</div>
+            <div id="agentResultPanel" class="empty-state agent-panel-empty">
+                <div class="empty-icon">🧠</div>
+                <p>发送一条指令后，这里会展示结构化查询结果。</p>
+            </div>
+        </div>
+
+        <div class="card agent-side-card">
+            <div class="card-title">待确认操作</div>
+            <div id="agentActionPanel" class="empty-state agent-panel-empty">
+                <div class="empty-icon">📝</div>
+                <p>识别到控制指令后，这里会展示待确认操作，确认后才会真正执行。</p>
+            </div>
+        </div>
+    </aside>
+</div>
+{% endblock %}

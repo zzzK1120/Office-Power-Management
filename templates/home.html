@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}首页 - 办公室智能用电管理系统{% endblock %}
+{% block page_title %}办公室选择与模块入口{% endblock %}
+
+{% block content %}
+<script>window.__PAGE__ = "home";</script>
+<p class="home-intro">先选择办公室，再进入实时监控、远程控制、定时策略。用电统计与异常报警为全局模块。</p>
+
+<div class="card">
+    <div class="card-title">办公室管理</div>
+    <form id="officeForm" style="margin-bottom:14px;">
+        <div class="form-row">
+            <div class="form-group">
+                <label>办公室名称</label>
+                <input id="officeName" placeholder="例如：A栋-3F-产品部">
+            </div>
+            <div class="form-group">
+                <label>位置</label>
+                <input id="officeLocation" placeholder="例如：A栋3层">
+            </div>
+            <div class="form-group">
+                <label>备注</label>
+                <input id="officeDesc" placeholder="可选">
+            </div>
+        </div>
+        <button class="btn btn-primary btn-sm" type="submit" id="officeSubmit">添加办公室</button>
+        <button class="btn btn-secondary btn-sm" type="button" id="officeCancelEdit" hidden>取消编辑</button>
+    </form>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>当前</th>
+                    <th>名称</th>
+                    <th>位置</th>
+                    <th>备注</th>
+                    <th>开启/总设备</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="officeBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">办公室业务模块（按所选办公室生效）</div>
+    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:12px;" id="officeSelectedHint">当前未选择办公室</p>
+    <div class="module-grid">
+        <a href="{{ url_for('monitor.index') }}" class="module-card">
+            <span class="module-icon">📊</span>
+            <h3 class="module-title">设备实时监控</h3>
+            <p class="module-desc">查看所选办公室设备的电压、功率、用电量</p>
+            <span class="module-arrow">进入 →</span>
+        </a>
+        <a href="{{ url_for('control.index') }}" class="module-card">
+            <span class="module-icon">🔌</span>
+            <h3 class="module-title">远程开关控制</h3>
+            <p class="module-desc">控制所选办公室内设备与分组开关</p>
+            <span class="module-arrow">进入 →</span>
+        </a>
+        <a href="{{ url_for('schedule.index') }}" class="module-card">
+            <span class="module-icon">⏰</span>
+            <h3 class="module-title">简单定时策略</h3>
+            <p class="module-desc">为所选办公室配置定时开关策略</p>
+            <span class="module-arrow">进入 →</span>
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-title">全局模块（跨办公室）</div>
+    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:12px;">以下模块不受办公室切换影响。</p>
+    <div class="module-grid">
+        <a href="{{ url_for('statistics.index') }}" class="module-card">
+            <span class="module-icon">📈</span>
+            <h3 class="module-title">基础用电统计</h3>
+            <p class="module-desc">每日、每周、每月报表和设备用电汇总</p>
+            <span class="module-arrow">进入 →</span>
+        </a>
+        <a href="{{ url_for('alarm.index') }}" class="module-card">
+            <span class="module-icon">🔔</span>
+            <h3 class="module-title">异常报警推送</h3>
+            <p class="module-desc">统一查看和处理全局报警与阈值规则</p>
+            <span class="module-arrow">进入 →</span>
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}模拟调试 - 办公室智能用电管理系统{% endblock %}
+{% block page_title %}模拟采样参数调试{% endblock %}
+
+{% block content %}
+<script>window.__PAGE__ = "simulation_debug";</script>
+
+<div class="card">
+    <div class="card-title">全局模拟参数</div>
+    <p style="font-size:14px; color:var(--text-secondary); margin-bottom:12px;">
+        保存后写入服务器内存与 <code>instance/simulation_global.json</code>，重启后仍生效；修改「采样间隔」会立即重调度后台模拟任务。
+    </p>
+    <form id="simGlobalForm">
+        <div class="form-row">
+            <div class="form-group"><label>采样间隔(秒)</label><input id="gInterval" type="number" min="1"></div>
+            <div class="form-group"><label>待机功率上限(W)</label><input id="gStandby" type="number" step="0.1"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>电压下限(V)</label><input id="gVMin" type="number" step="0.1"></div>
+            <div class="form-group"><label>电压上限(V)</label><input id="gVMax" type="number" step="0.1"></div>
+            <div class="form-group"><label>功率下限(W)</label><input id="gPMin" type="number" step="0.1"></div>
+            <div class="form-group"><label>功率上限(W)</label><input id="gPMax" type="number" step="0.1"></div>
+        </div>
+        <div class="form-row">
+            <div class="form-group"><label>电压异常概率(0~1)</label><input id="gProbV" type="number" min="0" max="1" step="0.01"></div>
+            <div class="form-group"><label>功率异常概率(0~1)</label><input id="gProbP" type="number" min="0" max="1" step="0.01"></div>
+        </div>
+        <button class="btn btn-primary" type="submit">保存全局参数</button>
+    </form>
+</div>
+
+<div class="card">
+    <div class="card-title">设备级参数覆盖（留空表示使用全局）</div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>设备</th>
+                    <th>电压范围</th>
+                    <th>功率范围</th>
+                    <th>异常概率(电压/功率)</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="simDeviceBody"></tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
